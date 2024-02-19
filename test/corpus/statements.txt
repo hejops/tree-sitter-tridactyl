@@ -1,0 +1,19 @@
+===
+Bindings
+===
+
+bind U urlparent
+bind   U  urlparent
+bind    U	urlparent
+---
+
+(program
+  (binding
+    (key)
+    (action))
+  (binding
+    (key)
+    (action))
+  (binding
+    (key)
+    (action)))
