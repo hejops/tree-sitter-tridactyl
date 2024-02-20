@@ -49,13 +49,33 @@ module.exports = grammar({
 
     binding: ($) =>
       seq(
-        "bind", //
+        "bind",
         optional($.bind_mode),
-        $.key,
+        choice($.single_key, $.compound_key),
         $.excmd,
       ),
 
-    key: ($) => /[A-Za-z]/,
+    unbinding: ($) =>
+      seq(
+        "unbind",
+        optional($.bind_mode),
+        choice($.single_key, $.compound_key),
+      ),
+
+    single_key: ($) => /[A-Za-z]/,
+    key_modifier: ($) => /[AaCcMm]/,
+    compound_key: ($) =>
+      seq(
+        // <A-j>
+        "<",
+        // token.X() does not allow references
+        // https://github.com/tree-sitter/tree-sitter/discussions/1266#discussioncomment-1003681
+        token.immediate(choice("A", "C", "M")),
+        token.immediate("-"),
+        token.immediate(/[A-Za-z]/),
+        token.immediate(">"),
+      ),
+
     bind_mode: ($) =>
       seq(
         "--mode=", //
