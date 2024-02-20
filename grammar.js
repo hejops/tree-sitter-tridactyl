@@ -8,6 +8,7 @@
 // https://gist.github.com/Aerijo/df27228d70c633e088b0591b8857eeef#walkthrough
 // https://github.com/tree-sitter/tree-sitter-bash/blob/975bc70ad95dbbf2733872bc2e0a059c055db983/grammar.js#L121
 // https://github.com/tree-sitter/tree-sitter/blob/master/docs/section-3-creating-parsers.md#the-grammar-dsl
+// https://github.com/tridactyl/tridactyl/issues/789
 // https://github.com/tridactyl/vim-tridactyl/blob/master/syntax/tridactyl.vim#L19
 // https://siraben.dev/2022/03/01/tree-sitter.html
 // https://tree-sitter.github.io/tree-sitter/creating-parsers#getting-started
@@ -18,17 +19,30 @@ module.exports = grammar({
   // tree-sitter parse <testfile> (read all tokens)
   // tree-sitter test (verify that parsed tokens yield the correct ast)
 
+  // < ~/.config/tridactyl/tridactylrc grep -P '^[^"]' | sort
+
   rules: {
     program: ($) => repeat($.statement), // zero or more statements
 
-    comment: (_) => token(prec(-10, /".*/)),
+    // TODO: forbid inline comments
+    comment: (_) => token(prec(-10, /"[^\n]+/)),
+
+    single_word: ($) => /[A-Za-z-_]+/, // placeholder
+    domain: ($) => /[A-Za-z0-9]+\.\S+/, // TODO: use the regex (?) they use
+    url: ($) =>
+      // https://mathiasbynens.be/demo/url-regex
+      /(https?|ftp):\/\/[^\s/$.?#].[^\s]*/,
 
     statement: ($) =>
       choice(
         //
 
+        $.alias,
+        $.autocmd,
+        $.autocontain,
         $.binding,
-        // $.alias,
+        $.comment,
+        $.unbinding,
         // $.command,
         // $.setting,
       ),
@@ -42,10 +56,35 @@ module.exports = grammar({
           "composite",
           "scrollpage",
           "urlparent",
+          "tabmove",
         ),
+        // optional(repeat($.excmd_args)),
         optional($.excmd_args),
       ),
-    excmd_args: (_) => token(prec(-10, /.*/)), // junk for now
+
+    excmd_or_alias: ($) => choice($.excmd, $.alias_name),
+    excmd_args: (_) => token(prec(-10, /\S+/)), // junk for now
+
+    alias: ($) => seq("alias", $.alias_name, $.alias_expansion),
+    alias_name: ($) => $.single_word,
+    alias_expansion: ($) => repeat1($.single_word), // junk for now
+
+    autocmd: ($) => seq("autocmd", $.autocmd_event, $.domain, $.excmd_or_alias),
+    autocmd_event: ($) => "DocLoad", // TODO
+
+    autocontain: ($) =>
+      seq(
+        "autocontain",
+        choice(
+          // You should use this command with an -s (sane mode) or -u (URL
+          // mode) flag. Usage without a flag uses an incorrect regular
+          // expression which may cause weird behaviour and has been left in
+          // for compatibility reasons.
+          seq("-s", $.domain),
+          seq("-u", $.url),
+        ),
+        $.single_word,
+      ),
 
     binding: ($) =>
       seq(
