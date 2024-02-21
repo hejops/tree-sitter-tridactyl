@@ -51,12 +51,12 @@ module.exports = grammar({
       seq(
         //
         choice(
-          // TODO: get from https://github.com/tridactyl/tridactyl/blob/master/src/excmds.ts
-
-          "composite",
-          "scrollpage",
-          "urlparent",
-          "tabmove",
+          // https://raw.githubusercontent.com/tridactyl/tridactyl/master/src/excmds.ts
+          // grep -P '^export (async )?function \w+\(' | grep -Po '\w+\(' | tr -d '(' | sort | xargs
+          // is this overkill?
+          <!-- prettier-ignore-start -->
+          "addJump", "addTabHistory", "addTridactylEditorClass", "apropos", "autocmd", "autocmddelete", "autocontain", "back", "bind", "bindshow", "bindurl", "bindwizard", "blacklistadd", "bmark", "bmarks", "buildFilterConfigs", "changelistjump", "clearsearchhighlight", "clipboard", "colourscheme", "comclear", "command", "composite", "containerclose", "containercreate", "containerdelete", "containerupdate", "credits", "cssparse", "curJumps", "curTabHistory", "drawingerasertoggle", "drawingstart", "echo", "editor", "elementunhide", "escapehatch", "exclaim", "exclaim_quiet", "extoptions", "fillcmdline", "fillcmdline_nofocus", "fillcmdline_notrail", "fillcmdline_tmp", "fillinput", "find", "findnext", "findselect", "firefoxsyncpull", "firefoxsyncpush", "fixamo", "fixamo_quiet", "focusbyid", "focusinput", "followpage", "forward", "fullscreen", "get", "getAutocmdEvents", "getclip", "getGotoSelectors", "getinput", "getInput", "getInputSelector", "getJumpPageId", "getNativeVersion", "getRssLinks", "geturlsforlinks", "gobble", "goto", "guiset", "guiset_quiet", "help", "hidecmdline", "hint", "home", "issue", "js", "jsb", "jsonview", "jsua", "jumble", "jumpnext", "jumpprev", "keyfeed", "keymap", "loadaucmds", "loadtheme", "markadd", "markaddglobal", "markaddlocal", "markjump", "markjumpbefore", "markjumpglobal", "markjumplocal", "mktridactylrc", "mode", "mouse_mode", "mute", "native", "nativeinstall", "nativeopen", "neo_mouse_mode", "nmode", "no_mouse_mode", "open", "open_quiet", "perfdump", "perfhistogram", "pied_piper_mouse_mode", "pin", "proxyadd", "proxyremove", "qall", "quickmark", "reader", "readerold", "readerurl", "recontain", "reload", "reloadall", "reloadallbut", "reloaddead", "reloadhard", "removepref", "removeTridactylEditorClass", "repeat", "reset", "reseturl", "restart", "rot13", "rssexec", "run_exstr", "sanitise", "saveas", "saveJumps", "saveTabHistory", "scrollline", "scrollpage", "scrollpx", "scrolltab", "scrollto", "searchsetkeyword", "set", "setContentStateGroup", "setmode", "setnull", "setpref", "seturl", "shellescape", "showcmdline", "sidebaropen", "sidebartoggle", "sleep", "snow_mouse_mode", "source", "source_quiet", "tab", "taball", "tabaudio", "tabclose", "tabcloseallto", "tabcurrentrename", "tabdetach", "tabduplicate", "tabgrab", "tab_helper", "tabmove", "tabnext", "tabnext_gt", "tabonly", "tabopen", "tabopen_helper", "tabopenwait", "tabprev", "tabpush", "tabqueue", "tabrename", "tabsort", "text2qr", "tgroupabort", "tgroupclose", "tgroupcreate", "tgrouplast", "tgroupmove", "tgrouprename", "tgroupswitch", "ttscontrol", "ttsread", "ttsvoices", "tutor", "unbind", "unbindurl", "undo", "unfocus", "unloadtheme", "unset", "unsetmode", "unseturl", "updatecheck", "updatenative", "url2args", "urlincrement", "urlmodify", "urlmodify_js", "urlparent", "urlroot", "version", "viewconfig", "viewcontainers", "viewsource", "winclose", "winmerge", "winopen", "wintitle", "yank", "yankimage", "zoom",
+            <!-- prettier-ignore-end -->
         ),
         // optional(repeat($.excmd_args)),
         optional($.excmd_args),
