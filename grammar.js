@@ -70,7 +70,21 @@ module.exports = grammar({
     alias_expansion: ($) => repeat1($.single_word), // junk for now
 
     autocmd: ($) => seq("autocmd", $.autocmd_event, $.domain, $.excmd_or_alias),
-    autocmd_event: ($) => "DocLoad", // TODO
+    // https://github.com/tridactyl/tridactyl/blob/2414aba406f83d5c4f92b6b29988e1a8427c67f7/src/excmds.ts#L4599
+    autocmd_event: ($) =>
+      choice(
+        "DocStart",
+        "DocLoad",
+        "DocEnd",
+        "TriStart",
+        "TabEnter",
+        "TabLeft",
+        "FullscreenChange",
+        "FullscreenEnter",
+        "FullscreenLeft",
+        "UriChange",
+        "HistoryState",
+      ),
 
     autocontain: ($) =>
       seq(
